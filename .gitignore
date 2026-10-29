@@ -7,17 +7,3 @@ backend/staticfiles/
 node_modules/
 frontend/dist/
 .DS_Store
-
-# Python environment and test files
-.pytest_cache/
-.coverage
-# Python cache files
-__pycache__/
-*.py[cod]
-
-# Virtual environment
-.venv/
-venv/
-
-# Environment variables
-.env

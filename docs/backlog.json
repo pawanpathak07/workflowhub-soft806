@@ -1,0 +1,164 @@
+[
+  {
+    "id": "US-01",
+    "rank": 1,
+    "priority": "High",
+    "type": "Application",
+    "story": "As a new user, I want to register with a username, email and password so that I can have my own private workflow space.",
+    "acceptance": "Registration returns a token; weak passwords and duplicate emails are rejected.",
+    "branch": "feature/auth-register-login"
+  },
+  {
+    "id": "US-02",
+    "rank": 2,
+    "priority": "High",
+    "type": "Application",
+    "story": "As a registered user, I want to log in and log out so that only I can access my workflow items.",
+    "acceptance": "Login returns a token; logout invalidates it; wrong password is rejected.",
+    "branch": "feature/auth-register-login"
+  },
+  {
+    "id": "US-03",
+    "rank": 3,
+    "priority": "High",
+    "type": "Application",
+    "story": "As a user, I want to create a workflow item with a title and description so that I can record the work I need to do.",
+    "acceptance": "A blank title is rejected; the new item starts as Pending.",
+    "branch": "feature/workflow-items-api"
+  },
+  {
+    "id": "US-04",
+    "rank": 4,
+    "priority": "High",
+    "type": "Application",
+    "story": "As a user, I want to change an item's status (Pending, In Progress, Completed) so that I can track my progress.",
+    "acceptance": "Only the three valid statuses are accepted; the change is saved.",
+    "branch": "feature/workflow-items-api"
+  },
+  {
+    "id": "US-05",
+    "rank": 5,
+    "priority": "Medium",
+    "type": "Application",
+    "story": "As a user, I want to edit an existing item so that I can correct or improve its title and description.",
+    "acceptance": "Edited values are saved and shown immediately.",
+    "branch": "feature/workflow-items-ui"
+  },
+  {
+    "id": "US-06",
+    "rank": 6,
+    "priority": "Medium",
+    "type": "Application",
+    "story": "As a user, I want to delete completed or outdated items so that my list stays relevant.",
+    "acceptance": "A confirmation is shown; the item is removed; other users' items cannot be deleted.",
+    "branch": "feature/workflow-items-ui"
+  },
+  {
+    "id": "US-07",
+    "rank": 7,
+    "priority": "Low",
+    "type": "Application",
+    "story": "As a user, I want to filter my items by status so that I can focus on what is still open.",
+    "acceptance": "Filtering by each status returns only matching items.",
+    "branch": "feature/workflow-items-ui"
+  },
+  {
+    "id": "US-08",
+    "rank": 8,
+    "priority": "High",
+    "type": "DevOps",
+    "story": "As a developer, I want a GitHub repository with feature branches, pull requests and a Kanban board so that work is organised and reviewed before merging.",
+    "acceptance": "main is protected; every change is merged by a reviewed pull request.",
+    "branch": "feature/repo-workflow"
+  },
+  {
+    "id": "US-09",
+    "rank": 9,
+    "priority": "High",
+    "type": "DevOps",
+    "story": "As a DevOps engineer, I want a Dockerfile for the Django backend so that it builds the same way on every machine.",
+    "acceptance": "docker build succeeds; the container answers /api/health/.",
+    "branch": "feature/docker-backend"
+  },
+  {
+    "id": "US-10",
+    "rank": 10,
+    "priority": "High",
+    "type": "DevOps",
+    "story": "As a DevOps engineer, I want a Dockerfile for the React frontend so that the user interface is packaged and served consistently.",
+    "acceptance": "docker build succeeds; the image serves the built site.",
+    "branch": "feature/docker-frontend"
+  },
+  {
+    "id": "US-11",
+    "rank": 11,
+    "priority": "High",
+    "type": "DevOps",
+    "story": "As a developer, I want a GitHub Actions workflow that runs on every push and pull request so that broken code is found before it is merged.",
+    "acceptance": "The workflow runs tests and builds both images; the run is green.",
+    "branch": "feature/github-actions-ci"
+  },
+  {
+    "id": "US-12",
+    "rank": 12,
+    "priority": "High",
+    "type": "DevOps",
+    "story": "As a security-conscious developer, I want configuration and secrets kept in environment variables so that no secret is stored in the repository.",
+    "acceptance": "No secret key in Git; .env is ignored; CI and Docker read values from variables.",
+    "branch": "feature/env-config"
+  },
+  {
+    "id": "US-13",
+    "rank": 13,
+    "priority": "Medium",
+    "type": "DevOps",
+    "story": "As a team lead, I want a CircleCI pipeline for the same repository so that the two CI tools can be compared on real evidence.",
+    "acceptance": "CircleCI builds and tests the project and builds both Docker images successfully.",
+    "branch": "feature/circleci-pipeline"
+  },
+  {
+    "id": "US-14",
+    "rank": 14,
+    "priority": "Medium",
+    "type": "DevOps",
+    "story": "As a developer, I want Docker Compose to start the whole stack so that I can run the full application locally with one command.",
+    "acceptance": "docker compose up --build starts frontend and backend.",
+    "branch": "feature/docker-compose"
+  },
+  {
+    "id": "US-15",
+    "rank": 15,
+    "priority": "Medium",
+    "type": "DevOps",
+    "story": "As a developer, I want automated backend and frontend tests in the pipeline so that regressions are caught automatically.",
+    "acceptance": "The pipeline fails when a test fails.",
+    "branch": "feature/automated-tests"
+  },
+  {
+    "id": "US-16",
+    "rank": 16,
+    "priority": "Low",
+    "type": "DevOps",
+    "story": "As a developer, I want dependency and Docker layer caching in the pipeline so that builds finish faster and use fewer free minutes.",
+    "acceptance": "A second run is faster than the first.",
+    "branch": "feature/pipeline-caching"
+  },
+  {
+    "id": "US-17",
+    "rank": 17,
+    "priority": "Low",
+    "type": "DevOps",
+    "story": "As a release manager, I want the pipeline to publish tagged images to a container registry so that deployments can pull tested images.",
+    "acceptance": "Images are pushed only from main with a version tag.",
+    "branch": "future/registry-publish"
+  },
+  {
+    "id": "US-18",
+    "rank": 18,
+    "priority": "Low",
+    "type": "DevOps",
+    "story": "As a team member, I want a build-status badge in the README so that everyone can see the health of main at a glance.",
+    "acceptance": "Badges for both CI tools appear in README.md.",
+    "branch": "future/status-badge"
+  }
+]
