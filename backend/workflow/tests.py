@@ -35,7 +35,7 @@ class WorkflowItemApiTests(APITestCase):
         )
 
         self.assertEqual(response.status_code, 400)
-        
+
     def test_title_whitespace_is_removed(self):
         response = self.client.post(
             "/api/items/",
@@ -95,6 +95,27 @@ class WorkflowItemApiTests(APITestCase):
         )
 
 class PriorityAndDueDateTests(APITestCase):
+    def test_create_with_priority_and_due_date(self):
+            def test_filter_items_by_priority(self):
+        self.client.post(
+            "/api/items/",
+            {"title": "Urgent task", "priority": "high"},
+            format="json"
+        )
+
+        self.client.post(
+            "/api/items/",
+            {"title": "Normal task", "priority": "low"},
+            format="json"
+        )
+
+        response = self.client.get("/api/items/?priority=high")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            [item["title"] for item in response.data],
+            ["Urgent task"]
+        )
     def setUp(self):
         user = User.objects.create_user("alice", "alice@example.com", "S3cure-pass!")
         self.client.credentials(HTTP_AUTHORIZATION="Token " + Token.objects.create(user=user).key)
