@@ -1,3 +1,4 @@
+
 from rest_framework import viewsets
 
 from .models import WorkflowItem
@@ -9,19 +10,13 @@ class WorkflowItemViewSet(viewsets.ModelViewSet):
 
     serializer_class = WorkflowItemSerializer
 
-  def get_queryset(self):
-    # Users can only ever see and change their own items.
-    queryset = WorkflowItem.objects.filter(owner=self.request.user)
-
-    status = self.request.query_params.get("status")
-    if status in WorkflowItem.Status.values:
-        queryset = queryset.filter(status=status)
-
-    priority = self.request.query_params.get("priority")
-    if priority in WorkflowItem.Priority.values:
-        queryset = queryset.filter(priority=priority)
-
-    return queryset
+    def get_queryset(self):
+        # Users can only ever see and change their own items.
+        queryset = WorkflowItem.objects.filter(owner=self.request.user)
+        status = self.request.query_params.get("status")
+        if status in WorkflowItem.Status.values:
+            queryset = queryset.filter(status=status)
+        return queryset
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
