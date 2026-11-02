@@ -65,7 +65,16 @@ class WorkflowItemApiTests(APITestCase):
         item = WorkflowItem.objects.create(owner=self.other, title="Private")
         self.assertEqual(self.client.get(f"/api/items/{item.id}/").status_code, 404)
         self.assertEqual(self.client.delete(f"/api/items/{item.id}/").status_code, 404)
+    def test_list_orders_newest_items_first(self):
+        WorkflowItem.objects.create(owner=self.user, title="Older task")
+        WorkflowItem.objects.create(owner=self.user, title="Newer task")
 
+        response = self.client.get("/api/items/")
+
+        self.assertEqual(
+            [item["title"] for item in response.data],
+            ["Newer task", "Older task"]
+        )
 
 class PriorityAndDueDateTests(APITestCase):
     def setUp(self):
