@@ -89,7 +89,12 @@ class PriorityAndDueDateTests(APITestCase):
         self.assertEqual(self.client.post("/api/items/", {"title": "x", "priority": "urgent"}, format="json").status_code, 400)
         self.assertEqual(self.client.post("/api/items/", {"title": "x", "due_date": "not-a-date"}, format="json").status_code, 400)
 
-
+    def test_workflow_item_string_representation(self):
+        item = WorkflowItem.objects.create(
+            owner=self.user,
+            title="Complete assignment"
+        )
+        self.assertEqual(str(item), "Complete assignment (Pending)")
 class HealthTests(APITestCase):
     def test_health_endpoint_is_public(self):
         response = self.client.get("/api/health/")
