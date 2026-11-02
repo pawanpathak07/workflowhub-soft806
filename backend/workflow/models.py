@@ -1,3 +1,4 @@
+
 from django.conf import settings
 from django.db import models
 
@@ -9,6 +10,7 @@ class WorkflowItem(models.Model):
         COMPLETED = "completed", "Completed"
 
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="workflow_items")
+
     class Priority(models.TextChoices):
         LOW = "low", "Low"
         MEDIUM = "medium", "Medium"
