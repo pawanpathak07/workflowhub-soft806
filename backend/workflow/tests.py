@@ -27,6 +27,15 @@ class WorkflowItemApiTests(APITestCase):
     def test_blank_title_is_rejected(self):
         response = self.client.post("/api/items/", {"title": "   "}, format="json")
         self.assertEqual(response.status_code, 400)
+            def test_title_cannot_exceed_120_characters(self):
+        response = self.client.post(
+            "/api/items/",
+            {"title": "A" * 121},
+            format="json"
+        )
+
+        self.assertEqual(response.status_code, 400)
+        
     def test_title_whitespace_is_removed(self):
         response = self.client.post(
             "/api/items/",
@@ -36,7 +45,7 @@ class WorkflowItemApiTests(APITestCase):
 
         self.assertEqual(response.status_code, 201)
         self.assertEqual(response.data["title"], "Complete assignment")
-        
+
     def test_list_only_returns_own_items(self):
         WorkflowItem.objects.create(owner=self.user, title="Mine")
         WorkflowItem.objects.create(owner=self.other, title="Theirs")
