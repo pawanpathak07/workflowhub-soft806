@@ -1,78 +1,31 @@
+# Use the latest 2.1 version of CircleCI pipeline process engine.
+# See: https://circleci.com/docs/reference/configuration-reference/
 version: 2.1
 
-# Pipeline parameters / shared environment (non-secret values only; secrets go in CircleCI Project Settings > Environment Variables)
+# Define a job to be invoked later in a workflow.
+# See: https://circleci.com/docs/guides/orchestrate/jobs-steps/#jobs-overview & https://circleci.com/docs/reference/configuration-reference/#jobs
 jobs:
-  backend-test:
+  say-hello:
+    # Specify the execution environment. You can specify an image from Docker Hub or use one of our convenience images from CircleCI's Developer Hub.
+    # See: https://circleci.com/docs/guides/execution-managed/executor-intro/ & https://circleci.com/docs/reference/configuration-reference/#executor-job
     docker:
-      - image: cimg/python:3.12
-    working_directory: ~/project/backend
-    environment:
-      DJANGO_DEBUG: "True"
-      AUTH_THROTTLE_RATE: 1000/min
-    steps:
-      - checkout:
-          path: ~/project
-      - restore_cache:
-          keys:
-            - pip-v1-{{ checksum "requirements.txt" }}
-      - run:
-          name: Install dependencies with pip
-          command: pip install --user -r requirements.txt
-      - save_cache:
-          key: pip-v1-{{ checksum "requirements.txt" }}
-          paths:
-            - ~/.cache/pip
-      - run:
-          name: Check migrations are up to date
-          command: python manage.py makemigrations --check --dry-run
-      - run:
-          name: Run Django tests
-          command: python manage.py test
+      # Specify the version you desire here
+      # See: https://circleci.com/developer/images/image/cimg/base
+      - image: cimg/base:current
 
-  frontend-test:
-    docker:
-      - image: cimg/node:20.18
-    working_directory: ~/project/frontend
+    # Add steps to the job
+    # See: https://circleci.com/docs/guides/orchestrate/jobs-steps/#steps-overview & https://circleci.com/docs/reference/configuration-reference/#steps
     steps:
-      - checkout:
-          path: ~/project
-      - run:
-          name: Install dependencies with npm
-          command: npm install
-      - run:
-          name: Run unit tests
-          command: npm test
-      - run:
-          name: Build production bundle
-          command: npm run build
-          environment:
-            VITE_API_URL: http://localhost:8000/api
-
-  build-docker-images:
-    docker:
-      - image: cimg/base:stable
-    steps:
+      # Checkout the code as the first step.
       - checkout
-      - setup_remote_docker
       - run:
-          name: Build backend image
-          command: docker build -t workflowhub-backend:${CIRCLE_SHA1:0:7} ./backend
-      - run:
-          name: Build frontend image
-          command: |
-            docker build \
-              --build-arg VITE_API_URL=${VITE_API_URL:-http://localhost:8000/api} \
-              -t workflowhub-frontend:${CIRCLE_SHA1:0:7} ./frontend
-      - run:
-          name: List built images
-          command: docker images | grep workflowhub
+          name: "Say hello"
+          command: "echo Hello, World!"
 
+# Orchestrate jobs using workflows
+# See: https://circleci.com/docs/guides/orchestrate/workflows/ & https://circleci.com/docs/reference/configuration-reference/#workflows
 workflows:
-  build-test-dockerise:
+  say-hello-workflow: # This is the name of the workflow, feel free to change it to better match your workflow.
+    # Inside the workflow, you define the jobs you want to run.
     jobs:
-      - backend-test
-      - frontend-test
-      - build-docker-images:
-          requires:
-            - backend-test
-            - frontend-test
+      - say-hello
