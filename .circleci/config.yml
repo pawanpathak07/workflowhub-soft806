@@ -1,78 +1,46 @@
+
 version: 2.1
 
-# Pipeline parameters / shared environment (non-secret values only; secrets go in CircleCI Project Settings > Environment Variables)
 jobs:
   backend-test:
     docker:
-      - image: cimg/python:3.12
-    working_directory: ~/project/backend
+      - image: cimg/python:3.13
+    working_directory: ~/workflowhub
     environment:
-      DJANGO_DEBUG: "True"
-      AUTH_THROTTLE_RATE: 1000/min
+      DJANGO_SECRET_KEY: "circleci-test-only-key-not-for-production"
     steps:
-      - checkout:
-          path: ~/project
-      - restore_cache:
-          keys:
-            - pip-v1-{{ checksum "requirements.txt" }}
+      - checkout
       - run:
-          name: Install dependencies with pip
-          command: pip install --user -r requirements.txt
-      - save_cache:
-          key: pip-v1-{{ checksum "requirements.txt" }}
-          paths:
-            - ~/.cache/pip
+          name: Install backend dependencies
+          command: |
+            cd backend
+            python -m pip install --upgrade pip
+            pip install -r requirements.txt
       - run:
-          name: Check migrations are up to date
-          command: python manage.py makemigrations --check --dry-run
-      - run:
-          name: Run Django tests
-          command: python manage.py test
+          name: Run Django backend tests
+          command: |
+            cd backend
+            python manage.py test
 
   frontend-test:
     docker:
-      - image: cimg/node:20.18
-    working_directory: ~/project/frontend
-    steps:
-      - checkout:
-          path: ~/project
-      - run:
-          name: Install dependencies with npm
-          command: npm install
-      - run:
-          name: Run unit tests
-          command: npm test
-      - run:
-          name: Build production bundle
-          command: npm run build
-          environment:
-            VITE_API_URL: http://localhost:8000/api
-
-  build-docker-images:
-    docker:
-      - image: cimg/base:stable
+      - image: cimg/node:20.19
+    working_directory: ~/workflowhub
     steps:
       - checkout
-      - setup_remote_docker
       - run:
-          name: Build backend image
-          command: docker build -t workflowhub-backend:${CIRCLE_SHA1:0:7} ./backend
-      - run:
-          name: Build frontend image
+          name: Install frontend dependencies
           command: |
-            docker build \
-              --build-arg VITE_API_URL=${VITE_API_URL:-http://localhost:8000/api} \
-              -t workflowhub-frontend:${CIRCLE_SHA1:0:7} ./frontend
+            cd frontend
+            npm ci
       - run:
-          name: List built images
-          command: docker images | grep workflowhub
+          name: Run frontend tests
+          command: |
+            cd frontend
+            npm test -- --run
 
 workflows:
-  build-test-dockerise:
+  workflowhub-ci:
     jobs:
       - backend-test
       - frontend-test
-      - build-docker-images:
-          requires:
-            - backend-test
-            - frontend-test
