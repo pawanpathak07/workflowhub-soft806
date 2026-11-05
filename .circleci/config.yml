@@ -2,15 +2,12 @@
 version: 2.1
 
 jobs:
-    backend-test:
+  backend-test:
     docker:
       - image: cimg/python:3.13
-
+    working_directory: ~/workflowhub
     environment:
       DJANGO_SECRET_KEY: "circleci-test-only-key-not-for-production"
-
-    
-    working_directory: ~/workflowhub
     steps:
       - checkout
       - run:
