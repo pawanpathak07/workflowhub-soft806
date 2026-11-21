@@ -66,6 +66,19 @@ class WorkflowItemApiTests(APITestCase):
         self.assertEqual(self.client.get(f"/api/items/{item.id}/").status_code, 404)
         self.assertEqual(self.client.delete(f"/api/items/{item.id}/").status_code, 404)
 
+    def test_cannot_edit_another_users_item(self):
+        item = WorkflowItem.objects.create(owner=self.other, title="Private")
+
+        response = self.client.patch(
+            f"/api/items/{item.id}/",
+            {"title": "Changed by another user"},
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, 404)
+        item.refresh_from_db()
+        self.assertEqual(item.title, "Private")
+
 
 class PriorityAndDueDateTests(APITestCase):
     def setUp(self):
