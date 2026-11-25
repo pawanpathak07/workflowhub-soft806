@@ -11,7 +11,8 @@ export default defineConfig({
   },
 
   test: {
-    environment: 'node',
+    environment: 'jsdom',
+    setupFiles: './src/test/setup.js',
 
     // Do not let Vitest run Playwright browser tests
     exclude: [

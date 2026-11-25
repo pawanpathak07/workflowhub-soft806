@@ -7,3 +7,12 @@ backend/staticfiles/
 node_modules/
 frontend/dist/
 .DS_Store
+
+# Playwright generated reports and test results
+frontend/playwright-report/
+frontend/test-results/
+test-results/
+playwright-report/
+
+# Local databases
+*.sqlite3
